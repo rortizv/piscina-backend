@@ -80,12 +80,12 @@ router.delete('/:id_usuario', async (req, res) => {
 const createToken = (usuario) => {
     try {
         const payload = {
-            usuarioId: usuario.id,
+            id_usuario: usuario.id_usuario,
             createdAt: moment().unix(),
             expiredAt: moment().add(5, 'minutes').unix()
         }
         
-        return jwt.encode(payload, 'frase secreta');
+        return jwt.encode(payload, 'jZKnKkRvQZ');
     } catch (error) {
         res.status(401);
     }

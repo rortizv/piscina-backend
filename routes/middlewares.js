@@ -2,16 +2,16 @@ const jwt = require('jwt-simple');
 const moment = require('moment');
 
 const checkToken = (req, res, next) => {
-    console.log(req.headers["authorization"]);
-    if(!req.headers["authorization"]) {
+    console.log(req.headers["Authorization"]);
+    if(!req.headers["Authorization"]) {
         return res.status(401).json({ error: 'Necesitas incluir el token en la cabecera' });
     }
     
-    const usuarioToken = req.headers["authorization"];
+    const usuarioToken = req.headers["Authorization"];
     let payload = {};
     
     try {
-        payload = jwt.decode(usuarioToken, 'frase secreta');
+        payload = jwt.decode(usuarioToken, 'jZKnKkRvQZ');
     } catch (err) {
         return res.status(401).json({ error: 'El token es incorrecto', err});
     }
