@@ -1,5 +1,7 @@
 const router = require('express').Router();
+const middlewares = require('../middlewares');
 const { Reserva } = require('../../db');
+const { Turno } = require('../../models/turnos');
 
 router.get('/', async (req, res) => {
     try {
@@ -10,7 +12,24 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.get('/:fecha_reserva', middlewares.checkToken, async (req, res) => {
+    try {
+        const reservas = await Reserva.findAll({
+            where: {
+                fecha_reserva: req.params.fecha_reserva
+            }
+        });
+        if (reservas) {
+            res.status(200).json(reservas);
+        } else {
+            res.status(400);
+        }
+    } catch (error) {
+        res.status(400);
+    }
+});
+
+router.post('/crear-reserva', async (req, res) => {
     try {
         const reserva = await Reserva.create(req.body);
         res.status(200).json(reserva);
@@ -22,9 +41,13 @@ router.post('/', async (req, res) => {
 router.put('/:id_reserva', async (req, res) => {
     try {
         await Reserva.update(req.body, {
-            where: { id_reserva: req.params.id_reserva}
+            where: {
+                id_reserva: req.body.id_reserva
+            }
         });
-        res.status(200).json({ success: 'Modificado correctamente'});
+        res.status(200).json({
+            success: 'Modificado correctamente'
+        });
     } catch (error) {
         res.status(400);
     }
@@ -33,9 +56,13 @@ router.put('/:id_reserva', async (req, res) => {
 router.delete('/:id_reserva', async (req, res) => {
     try {
         await Reserva.destroy({
-            where: { id_reserva: req.params.id_reserva}
+            where: {
+                id_reserva: req.body.id_reserva
+            }
         });
-        res.status(200).json({ success: 'Eliminado correctamente'});
+        res.status(200).json({
+            success: 'Eliminado correctamente'
+        });
     } catch (error) {
         res.status(400);
     }

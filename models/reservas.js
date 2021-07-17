@@ -5,8 +5,20 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        fecha_reserva: type.DATE,
-        turno: type.STRING,
-        id_usuario: type.INTEGER
+        fecha_reserva: type.DATEONLY,
+        id_turno: {
+            type: type.INTEGER,
+            references: {
+                model: 'TURNOS',
+                key: 'id_turno'
+            }
+        },
+        torre_apto: {
+            type: type.STRING,
+            references: {
+                model: 'USUARIOS',
+                key: 'username'
+            }
+        }
     })
 }

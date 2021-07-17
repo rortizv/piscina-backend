@@ -2,14 +2,15 @@ const jwt = require('jwt-simple');
 const moment = require('moment');
 
 const checkToken = (req, res, next) => {
-    console.log(req.headers["Authorization"]);
-    if(!req.headers["Authorization"]) {
+    // console.log("Inicia CheckToken");
+    // console.log(req.headers["authorization"]);
+    if(!req.headers["authorization"]) {
         return res.status(401).json({ error: 'Necesitas incluir el token en la cabecera' });
     }
     
-    const usuarioToken = req.headers["Authorization"];
+    const usuarioToken = req.headers["authorization"];
     let payload = {};
-    
+    // console.log("pasó payload");
     try {
         payload = jwt.decode(usuarioToken, 'jZKnKkRvQZ');
     } catch (err) {
@@ -20,8 +21,8 @@ const checkToken = (req, res, next) => {
         return res.status(401).json({ error: 'El token ha expirado' });
     }
 
-    req.id_usuario = payload.id_usuario;
-
+    req.username = payload.username;
+    // console.log("llegó al next");
     next();
 }
 
