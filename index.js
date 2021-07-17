@@ -17,6 +17,6 @@ require('./db');
 
 app.use('/api', apiRouter);
 
-app.listen(3000, () => {
-    console.log('Servidor corriendo en puerto 3000');
+app.listen(process.env.PORT, () => {
+    console.log('Server running');
 });
