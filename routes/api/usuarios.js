@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { Usuario } = require('../../db');
+const { User } = require('../../db');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment');
 const jwt = require('jwt-simple');
@@ -9,25 +10,33 @@ router.post('/register', [
     check('username', 'El username es obligatorio').not().isEmpty().isEmail(),
     check('password', 'El password es obligatorio').not().isEmpty()
 ], async (req, res) => {
-
-    try {
-        const errors = validationResult(req);
-        if(!errors.isEmpty()) {
-            return res.status(422).json({ errores: errors.array()})
-        }
+    console.log(req.body.username);
+    const username = await User.findOne({ where: { username: req.body.username } });
+    console.log(username);
+    if(!username) {
+        try {
+            const errors = validationResult(req);            
+        
+            if(!errors.isEmpty()) {
+                return res.status(422).json({ errores: errors.array()})
+            }
     
-        req.body.password = bcrypt.hashSync(req.body.password, 10);
-        const usuario = await Usuario.create(req.body);
-        res.status(200).json(usuario);
-    } catch (error) {
-        res.status(400);
+            req.body.password = bcrypt.hashSync(req.body.password, 10);
+            const usuario = await User.create(req.body);
+            res.status(200).json(usuario);
+        } catch (error) {
+            res.status(400);
+        }
     }
-
+    else {
+        res.status(400).send("Usuario ya existe");
+    }
 });
 
 router.post('/login', async (req, res) => {
     try {
         const usuario = await Usuario.findOne({ where: { username: req.body.username } });
+        // console.log(usuario);
         if(usuario) {
             const iguales = bcrypt.compareSync(req.body.password, usuario.password);
             if(iguales) {
@@ -43,14 +52,31 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/listar', async (req, res) => {
     try {
-        const usuarios = await Usuario.findAll();
+        const usuarios = await User.findAll({
+            attributes: { exclude: ['password'] }
+        });
         res.status(200).json(usuarios);
     } catch (error) {
         res.status(400);
     }
 });
+
+// router.post('/validateUser', async (req, res) => {
+//     try {
+//         console.log(req.body.username);
+//         const username = await Usuario.findOne({ where: { username: req.body.username } });
+//         if(req.body.username) {
+//             res.status(400).json(username);
+//         }
+//         else {
+//             res.status(200);
+//         }
+//     } catch (error) {
+//         res.status(400);
+//     }
+// });
 
 router.put('/:id_usuario', async (req, res) => {
     try {
@@ -78,14 +104,16 @@ router.delete('/:id_usuario', async (req, res) => {
 });
 
 const createToken = (usuario) => {
+    console.log("entró al createToken");
     try {
         const payload = {
-            usuarioId: usuario.id,
+            id_usuario: usuario.id_usuario,
+            rolename: usuario.rolename,
             createdAt: moment().unix(),
-            expiredAt: moment().add(5, 'minutes').unix()
+            expiredAt: moment().add(60, 'minutes').unix()
         }
-        
-        return jwt.encode(payload, 'frase secreta');
+        //console.log(usuario);
+        return jwt.encode(payload, 'jZKnKkRvQZ');
     } catch (error) {
         res.status(401);
     }

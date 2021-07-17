@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('USUARIOS', {
+    return sequelize.define('USERS', {
         username: {
             type: type.STRING,
             primaryKey: true
