@@ -7,6 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+//app.use(express.static(__dirname + '/public/'));
 
 
 // app.get('/reservas/:id_reserva', function (req, res, next) {
@@ -17,6 +18,7 @@ require('./db');
 
 app.use('/api', apiRouter);
 
-app.listen(process.env.PORT, () => {
-    console.log('Server running');
+app.listen(3000, () => {
+    console.log('Server running port 3000')
+    //console.log(process.env.PORT);
 });

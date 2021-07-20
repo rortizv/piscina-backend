@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const { Usuario } = require('../../db');
 const { User } = require('../../db');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment');
@@ -35,8 +34,9 @@ router.post('/register', [
 
 router.post('/login', async (req, res) => {
     try {
-        const usuario = await Usuario.findOne({ where: { username: req.body.username } });
-        // console.log(usuario);
+        console.log(req.body);
+        const usuario = await User.findOne({ where: { username: req.body.username } });
+        console.log(usuario);
         if(usuario) {
             const iguales = bcrypt.compareSync(req.body.password, usuario.password);
             if(iguales) {
@@ -104,7 +104,7 @@ router.delete('/:id_usuario', async (req, res) => {
 });
 
 const createToken = (usuario) => {
-    console.log("entró al createToken");
+    //console.log("entró al createToken");
     try {
         const payload = {
             id_usuario: usuario.id_usuario,

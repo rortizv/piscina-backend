@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const middlewares = require('../middlewares');
-const { Reserva } = require('../../db');
-const { Turno } = require('../../models/turnos');
+const { Reserva, User, Turnos } = require('../../db');
 
 router.get('/', async (req, res) => {
     try {
@@ -14,11 +13,28 @@ router.get('/', async (req, res) => {
 
 router.get('/:fecha_reserva', middlewares.checkToken, async (req, res) => {
     try {
+        console.log(req.params)     
+
         const reservas = await Reserva.findAll({
             where: {
                 fecha_reserva: req.params.fecha_reserva
+            },
+            attributes: [
+                'id_reserva',
+                'fecha_reserva',
+                'id_turno',
+                'username'
+            ],
+            include: {
+                model: User,
+                attributes:['username']
+            },
+            include: {
+                model: Turnos,
+                attributes:['id_turno']
             }
         });
+        console.log(reservas);
         if (reservas) {
             res.status(200).json(reservas);
         } else {

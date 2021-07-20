@@ -1,5 +1,8 @@
+const { User, Turnos } = require('../db');
+
 module.exports = (sequelize, type) => {
-    return sequelize.define('RESERVAS', {
+
+    const reservas = sequelize.define('RESERVAS', {
         id_reserva: {
             type: type.INTEGER,
             primaryKey: true,
@@ -13,12 +16,31 @@ module.exports = (sequelize, type) => {
                 key: 'id_turno'
             }
         },
-        torre_apto: {
+        username: {
             type: type.STRING,
             references: {
-                model: 'USUARIOS',
+                model: 'USERS',
                 key: 'username'
             }
         }
-    })
+    });
+
+    reservas.associate = models => {
+        reservas.belongsTo(models.User, {
+            foreignKey: {
+                allowNull: false
+            }
+        })
+    }
+
+    reservas.associate = models => {
+        reservas.belongsTo(models.Turnos, {
+            foreignKey: {
+                allowNull: false
+            }
+        })
+    }
+
+    // reservas.belongsTo(Turnos);
+    // reservas.belongsTo(User);
 }

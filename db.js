@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 
-const UsuariosModel = require('./models/usuarios');
 const ReservasModel = require('./models/reservas');
 const RolesModel = require('./models/roles');
 const TurnosModel = require('./models/turnos');
@@ -11,7 +10,6 @@ const sequelize = new Sequelize('unicartagena_programaciondistribuida', 'rortiz'
     dialect: 'mysql'
 });
 
-const Usuario = UsuariosModel(sequelize, Sequelize);
 const Reserva = ReservasModel(sequelize, Sequelize);
 const Roles = RolesModel(sequelize, Sequelize);
 const Turnos = TurnosModel(sequelize, Sequelize);
@@ -23,7 +21,6 @@ sequelize.sync({ force: false })
     })
 
 module.exports = {
-    Usuario,
     Reserva,
     Roles,
     Turnos,
