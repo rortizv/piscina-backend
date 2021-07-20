@@ -16,22 +16,3 @@ module.exports = (sequelize, type) => {
         }
     });
 }
-
-    // reservas.associate = models => {
-    //     reservas.belongsTo(models.User, {
-    //         foreignKey: {
-    //             allowNull: false
-    //         }
-    //     })
-    // }
-
-    // reservas.associate = models => {
-    //     reservas.belongsTo(models.Turnos, {
-    //         foreignKey: {
-    //             allowNull: false
-    //         }
-    //     })
-    // }
-
-    // reservas.belongsTo(Turnos);
-    // reservas.belongsTo(User);

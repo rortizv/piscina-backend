@@ -1,6 +1,9 @@
 const router = require('express').Router();
-const middlewares = require('../middlewares');
-const { Reserva, User, Turnos } = require('../../db');
+const {
+    Reserva,
+    con
+} = require('../../db');
+require('../../asociations');
 
 router.get('/', async (req, res) => {
     try {
@@ -11,38 +14,17 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:fecha_reserva', middlewares.checkToken, async (req, res) => {
+router.get('/:fecha_reserva', async (req, res) => {
+    const miFecha = req.params.fecha_reserva;
+    const sql = "SELECT RESERVAs.id_reserva, RESERVAs.fecha_reserva, RESERVAs.turno, USERs.torre_apto FROM RESERVAs \
+        INNER JOIN USERs ON USERs.username = RESERVAs.username WHERE RESERVAs.fecha_reserva = \'" + miFecha + "\'";
     try {
-        console.log(req.params)     
-
-        const reservas = await Reserva.findAll({
-            where: {
-                fecha_reserva: req.params.fecha_reserva
-            }
-            // ,
-            // attributes: [
-            //     'id_reserva',
-            //     'fecha_reserva',
-            //     'id_turno',
-            //     'username'
-            // ],
-            // include: {
-            //     model: User,
-            //     attributes:['torre_apto']
-            // },
-            // include: {
-            //     model: Turnos,
-            //     attributes:['turno_txt']
-            // }
-        });
-        console.log(reservas);
-        if (reservas) {
-            res.status(200).json(reservas);
-        } else {
-            res.status(400);
-        }
+        const result = await con.promise().query(sql)
+        res.status(200).json(result[0]);
     } catch (error) {
-        res.status(400);
+        res.status(500).json({
+            error: error.message
+        });
     }
 });
 
