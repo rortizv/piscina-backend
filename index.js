@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 //app.use(express.static(__dirname + '/public/'));
 
 
-// app.get('/reservas/:id_reserva', function (req, res, next) {
+// app.get('/', function (req, res, next) {
 //   res.json({msg: 'This is CORS-enabled for all origins!'})
 // })
 

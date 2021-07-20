@@ -18,21 +18,22 @@ router.get('/:fecha_reserva', middlewares.checkToken, async (req, res) => {
         const reservas = await Reserva.findAll({
             where: {
                 fecha_reserva: req.params.fecha_reserva
-            },
-            attributes: [
-                'id_reserva',
-                'fecha_reserva',
-                'id_turno',
-                'username'
-            ],
-            include: {
-                model: User,
-                attributes:['username']
-            },
-            include: {
-                model: Turnos,
-                attributes:['id_turno']
             }
+            // ,
+            // attributes: [
+            //     'id_reserva',
+            //     'fecha_reserva',
+            //     'id_turno',
+            //     'username'
+            // ],
+            // include: {
+            //     model: User,
+            //     attributes:['torre_apto']
+            // },
+            // include: {
+            //     model: Turnos,
+            //     attributes:['turno_txt']
+            // }
         });
         console.log(reservas);
         if (reservas) {
