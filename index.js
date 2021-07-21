@@ -18,6 +18,10 @@ require('./db');
 
 app.use('/api', apiRouter);
 
-app.listen((process.env.PORT || 5000), () => {
+app.listen((process.env.PORT || 3000), () => {
     console.log('Server running');
 });
+
+// app.listen((3000), () => {
+//     console.log('Server running');
+// });
