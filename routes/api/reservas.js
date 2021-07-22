@@ -1,10 +1,7 @@
 const router = require('express').Router();
-const middlewares = require('../middlewares');
 const { Reserva, con } = require('../../db');
 
-require('../../asociations');
-
-router.get('/', middlewares.checkToken, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const reservas = await Reserva.findAll();
         res.status(200).json(reservas);
@@ -13,7 +10,7 @@ router.get('/', middlewares.checkToken, async (req, res) => {
     }
 });
 
-router.get('/:fecha_reserva', middlewares.checkToken, async (req, res) => {
+router.get('/:fecha_reserva', async (req, res) => {
     const miFecha = req.params.fecha_reserva;
     const sql = "SELECT RESERVAs.id_reserva, RESERVAs.fecha_reserva, RESERVAs.turno, USERs.torre_apto FROM RESERVAs \
         INNER JOIN USERs ON USERs.username = RESERVAs.username WHERE RESERVAs.fecha_reserva = \'" + miFecha + "\'";
