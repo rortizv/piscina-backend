@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { User } = require('../../db');
-const middlewares = require('../middlewares');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment');
 const jwt = require('jwt-simple');
@@ -51,7 +50,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/listar', middlewares.checkToken, async (req, res) => {
+router.get('/listar', async (req, res) => {
     try {
         const usuarios = await User.findAll({
             attributes: { exclude: ['password'] }
@@ -62,7 +61,7 @@ router.get('/listar', middlewares.checkToken, async (req, res) => {
     }
 });
 
-router.put('/:id_usuario', middlewares.checkToken, async (req, res) => {
+router.put('/:id_usuario', async (req, res) => {
     try {
         req.body.password = bcrypt.hashSync(req.body.password, 10);
         await Usuario.update(req.body, {
@@ -76,7 +75,7 @@ router.put('/:id_usuario', middlewares.checkToken, async (req, res) => {
     }
 });
 
-router.delete('/:id_usuario', middlewares.checkToken, async (req, res) => {
+router.delete('/:id_usuario', async (req, res) => {
     try {
         await Usuario.destroy({
             where: { id_usuario: req.params.id_usuario}
@@ -88,7 +87,6 @@ router.delete('/:id_usuario', middlewares.checkToken, async (req, res) => {
 });
 
 const createToken = (usuario) => {
-    //console.log("entró al createToken");
     try {
         const payload = {
             id_usuario: usuario.id_usuario,
@@ -96,7 +94,6 @@ const createToken = (usuario) => {
             createdAt: moment().unix(),
             expiredAt: moment().add(60, 'minutes').unix()
         }
-        //console.log(usuario);
         return jwt.encode(payload, 'jZKnKkRvQZ');
     } catch (error) {
         res.status(401);
