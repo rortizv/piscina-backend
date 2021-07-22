@@ -1,5 +1,4 @@
 const router = require('express').Router();
-//const middlewares = require('./middlewares');
 const apiReservasRouter = require('./api/reservas');
 const apiUsuariosRouter = require('./api/usuarios');
 const apiRolesRouter = require('./api/roles');

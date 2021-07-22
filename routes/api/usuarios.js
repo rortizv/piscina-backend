@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { User } = require('../../db');
+const middlewares = require('../middlewares');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment');
 const jwt = require('jwt-simple');
@@ -50,7 +51,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/listar', async (req, res) => {
+router.get('/listar', middlewares.checkToken, async (req, res) => {
     try {
         const usuarios = await User.findAll({
             attributes: { exclude: ['password'] }
@@ -61,22 +62,7 @@ router.get('/listar', async (req, res) => {
     }
 });
 
-// router.post('/validateUser', async (req, res) => {
-//     try {
-//         console.log(req.body.username);
-//         const username = await Usuario.findOne({ where: { username: req.body.username } });
-//         if(req.body.username) {
-//             res.status(400).json(username);
-//         }
-//         else {
-//             res.status(200);
-//         }
-//     } catch (error) {
-//         res.status(400);
-//     }
-// });
-
-router.put('/:id_usuario', async (req, res) => {
+router.put('/:id_usuario', middlewares.checkToken, async (req, res) => {
     try {
         req.body.password = bcrypt.hashSync(req.body.password, 10);
         await Usuario.update(req.body, {
@@ -90,7 +76,7 @@ router.put('/:id_usuario', async (req, res) => {
     }
 });
 
-router.delete('/:id_usuario', async (req, res) => {
+router.delete('/:id_usuario', middlewares.checkToken, async (req, res) => {
     try {
         await Usuario.destroy({
             where: { id_usuario: req.params.id_usuario}
