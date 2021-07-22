@@ -2,7 +2,6 @@ const Sequelize = require('sequelize');
 const mysql = require('mysql2');
 const ReservasModel = require('./models/reservas');
 const RolesModel = require('./models/roles');
-require('./asociations');
 const UserModel = require('./models/users');
 
 const sequelize = new Sequelize('unicartagena_programaciondistribuida', 'rortiz', 'rafa_2020', {
