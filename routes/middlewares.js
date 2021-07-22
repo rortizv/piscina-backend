@@ -5,7 +5,7 @@ const checkToken = (req, res, next) => {
     // console.log("Inicia CheckToken");
     // console.log(req.headers["authorization"]);
     if(!req.headers["authorization"]) {
-        return res.status(401).json({ error: 'Necesitas incluir el token en la cabecera' });
+        return res.status(401).json({ error: 'No estás autorizado' });
     }
     
     const usuarioToken = req.headers["authorization"];
