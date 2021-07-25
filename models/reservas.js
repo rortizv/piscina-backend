@@ -5,7 +5,7 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        fecha_reserva: type.DATEONLY,
+        fecha_reserva: type.DATE,
         turno: type.STRING,
         username: {
             type: type.STRING,

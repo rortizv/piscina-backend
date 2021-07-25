@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
 const { User } = require('../../db');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment');
@@ -9,9 +10,9 @@ router.post('/register', [
     check('username', 'El username es obligatorio').not().isEmpty().isEmail(),
     check('password', 'El password es obligatorio').not().isEmpty()
 ], async (req, res) => {
-    console.log(req.body.username);
+    //console.log(req.body.username);
     const username = await User.findOne({ where: { username: req.body.username } });
-    console.log(username);
+    //console.log(username);
     if(!username) {
         try {
             const errors = validationResult(req);            
@@ -81,6 +82,22 @@ router.delete('/:id_usuario', async (req, res) => {
             where: { id_usuario: req.params.id_usuario}
         });
         res.status(200).json({ success: 'Eliminado correctamente'});
+    } catch (error) {
+        res.status(400);
+    }
+});
+
+router.get('/propietarios', async (req, res) => {
+    try {
+        const propietarios = await User.findAll({
+            attributes: { exclude: ['password', 'rolename', 'createdAt', 'updatedAt'] },
+            where: {
+                torre_apto: {
+                    [Op.ne]: 'admin'
+                }
+            }
+        });
+        res.status(200).json(propietarios);
     } catch (error) {
         res.status(400);
     }
