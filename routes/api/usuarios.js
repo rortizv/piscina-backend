@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
+const middlewares = require('../middlewares');
 const { User } = require('../../db');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment');
@@ -51,7 +52,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/listar', async (req, res) => {
+router.get('/listar', middlewares.checkToken, async (req, res) => {
     try {
         const usuarios = await User.findAll({
             attributes: { exclude: ['password'] }
@@ -76,7 +77,7 @@ router.put('/:id_usuario', async (req, res) => {
     }
 });
 
-router.delete('/:id_usuario', async (req, res) => {
+router.delete('/:id_usuario', middlewares.checkToken, async (req, res) => {
     try {
         await Usuario.destroy({
             where: { id_usuario: req.params.id_usuario}
@@ -87,7 +88,7 @@ router.delete('/:id_usuario', async (req, res) => {
     }
 });
 
-router.get('/propietarios', async (req, res) => {
+router.get('/propietarios', middlewares.checkToken, async (req, res) => {
     try {
         const propietarios = await User.findAll({
             attributes: { exclude: ['password', 'rolename', 'createdAt', 'updatedAt'] },
